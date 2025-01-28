@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/template :: layout(~{::title},~{::body/content()})}">
+
+<head>
+	<title>InvenTrack</title>
+	<style>
+		.search-container {
+			margin-bottom: 1rem;
+		}
+
+		.form-inline {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+		}
+
+		.form-inline input {
+			margin-right: 1rem;
+			margin-bottom: 1rem;
+		}
+
+		.form-inline label {
+			margin-right: 0.5rem;
+		}
+
+		.table-responsive {
+			max-height: 400px;
+			overflow-y: auto;
+			border: 1px solid #ddd;
+			/* スクロールのエンクロージャーのためのスタイル */
+		}
+
+		thead th {
+			position: sticky;
+			top: 0px;
+			background-color: #f8f9fc;
+			/* 背景色を指定 */
+			z-index: 10;
+			/* 他の要素よりも前に配置 */
+		}
+
+		.error-message {
+			color: red;
+			margin-top: 0.5rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="card shadow mb-4">
+
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">操作履歴</h6>
+		</div>
+
+		<div class="card-body">
+
+				<!-- エラーメッセージの表示 -->
+				<div th:if="${errorMsg != null}" class="error-message">
+					<p th:text="${errorMsg}"></p>
+				</div>
+			</div>
+
+			<!-- 操作履歴テーブル -->
+			<h6 class="mb-3 font-weight-bold"></h6>
+			<div class="table-responsive" style="height: 500px;">
+				<div class="table-scrollable">
+					<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>管理者名</th>
+								<th>画面名</th>
+								<th>操作</th>
+								<th>ステータス</th>
+								<th>操作時刻</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item : ${operationLogList}">
+								<td>[[${item.adminInfo.adminName}]]</td>
+								<td>[[${item.tableKey}]]</td>
+								<td>[[${item.operateType}]]</td>
+								<td>[[${item.status}]]</td>
+								<td>[[${item.createDate}]]</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+</html>
