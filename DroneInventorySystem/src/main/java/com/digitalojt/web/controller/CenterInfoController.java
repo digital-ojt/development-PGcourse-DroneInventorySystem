@@ -3,6 +3,8 @@ package com.digitalojt.web.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,13 +30,17 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequiredArgsConstructor
-public class CenterInfoController {
+public class CenterInfoController extends AbstractController {
 
 	/** センター情報 サービス */
 	private final CenterInfoService centerInfoService;
 
 	/** メッセージソース */
 	private final MessageSource messageSource;
+
+	/** ログ設定 */
+	// TODO: 抽象クラスで定義。各Controllerでインスタンス化の方が実装漏れなど防げるためいいでしょうか？
+	private final Logger logger = LoggerFactory.getLogger("CenterInfo");
 
 	/**
 	 * 初期表示
@@ -45,7 +51,7 @@ public class CenterInfoController {
 	@GetMapping(UrlConsts.CENTER_INFO)
 	public String index(Model model) {
 
-		// TODO:ログの実装
+		logStart(logger, "GET", "centerInfoView");
 
 		// 在庫センター情報画面に表示するデータを取得
 		List<CenterInfo> centerInfoList = centerInfoService.getCenterInfoData();
@@ -58,6 +64,8 @@ public class CenterInfoController {
 
 		// 都道府県プルダウン情報をセット
 		model.addAttribute("regions", regions);
+
+		logEnd(logger, "GET", "centerInfoView");
 
 		return "admin/centerInfo/index";
 	}
@@ -72,7 +80,7 @@ public class CenterInfoController {
 	@PostMapping(UrlConsts.CENTER_INFO_SEARCH)
 	public String search(Model model, @Valid CenterInfoForm form, BindingResult bindingResult) {
 
-		// TODO: ログの実装
+		logStart(logger, "POST", "search");
 
 		// TODO: 入力値のバリデーションチェックに引っかかる場合は、InvalidInputExceptionをthrow
 		// Valid項目チェック
@@ -82,6 +90,8 @@ public class CenterInfoController {
 			String errorMsg = MessageManager.getMessage(messageSource,
 					bindingResult.getGlobalError().getDefaultMessage());
 			model.addAttribute("errorMsg", errorMsg);
+			
+			logValidationError(logger, "POST", "search-ValidError", form + errorMsg);
 
 			// 都道府県Enumをリストに変換
 			List<Region> regions = Arrays.asList(Region.values());
@@ -103,6 +113,8 @@ public class CenterInfoController {
 
 		// 都道府県プルダウン情報をセット
 		model.addAttribute("regions", regions);
+		
+		logEnd(logger, "POST", "search");
 
 		return "admin/centerInfo/index";
 	}

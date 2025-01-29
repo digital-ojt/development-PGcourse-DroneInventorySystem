@@ -10,6 +10,9 @@ public class UrlConsts {
 
 	// ログイン
 	public static final String LOGIN = "/login";
+
+	// エラー
+	public static final String ERROR = "/error";
 	
 	// 認証
 	public static final String AUTHENTICATE = "/authenticate";
