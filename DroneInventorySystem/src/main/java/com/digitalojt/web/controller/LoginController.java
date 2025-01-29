@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequiredArgsConstructor
-public class LoginController {
+public class LoginController extends AbstractController {
 	
 	/** セッション情報 */
 	private final HttpSession session;
